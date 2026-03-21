@@ -1,0 +1,8 @@
+baseURL = 'https://nebed.io/'
+languageCode = 'en-us'
+title = 'Nebed.io'
+# theme = 'terminal' # Using custom layouts
+
+[params]
+  author = "Nebed"
+  description = "Minimalist DevOps Logic"

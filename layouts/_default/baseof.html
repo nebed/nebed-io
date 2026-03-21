@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ if .IsHome }}Uchenna Nebedum (Nebed) - DevOps Engineer{{ else }}{{ .Title }} | Uchenna Nebedum{{ end }}</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="{{ if .Description }}{{ .Description }}{{ else }}Personal website of Uchenna Nebedum (Nebed). Senior DevOps Engineer, Cloud Architect, and builder of robust infrastructure systems.{{ end }}">
+    <meta name="keywords" content="Uchenna Nebedum, Nebed, Uche Nebed, DevOps Engineer, Cloud Architect, Kubernetes, Terraform, Site Reliability Engineering">
+    <meta name="author" content="Uchenna Nebedum">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ .Permalink }}">
+    <meta property="og:title" content="{{ if .IsHome }}Uchenna Nebedum (Nebed) - DevOps Engineer{{ else }}{{ .Title }}{{ end }}">
+    <meta property="og:description" content="{{ if .Description }}{{ .Description }}{{ else }}DevOps Engineer and Cloud Architect building scalable systems.{{ end }}">
+    <meta property="og:image" content="{{ .Site.BaseURL }}images/og-image.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ .Permalink }}">
+    <meta property="twitter:title" content="{{ if .IsHome }}Uchenna Nebedum (Nebed) - DevOps Engineer{{ else }}{{ .Title }}{{ end }}">
+    <meta property="twitter:description" content="{{ if .Description }}{{ .Description }}{{ else }}DevOps Engineer and Cloud Architect building scalable systems.{{ end }}">
+    <meta property="twitter:image" content="{{ .Site.BaseURL }}images/og-image.jpg">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Uchenna Nebedum",
+      "givenName": "Uchenna",
+      "familyName": "Nebedum",
+      "additionalName": "Nebed",
+      "alternateName": ["Uche Nebed", "Nebed"],
+      "url": "{{ .Site.BaseURL }}",
+      "jobTitle": "DevOps Engineer",
+      "worksFor": {
+        "@type": "Organization",
+        "name": "Euroboros Consulting"
+      },
+      "sameAs": [
+        "https://github.com/nebed",
+        "https://linkedin.com/in/uchennanebedum"
+      ],
+      "description": "Senior DevOps Engineer and Cloud Architect specializing in Kubernetes, Terraform, and high-reliability infrastructure."
+    }
+    </script>
+
+    <!-- Geist / Inter for Clean Look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ .Permalink }}" />
+
+    <style>
+        :root {
+            --bg: #FAFAFA; /* Soft white/gray */
+            --text: #171717;
+            --text-sub: #737373;
+            --accent: #2563EB; /* International Klein Blue-ish */
+            --border: #E5E5E5;
+            
+            --font-sans: 'Inter', -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #111;
+                --text: #EDEDED;
+                --text-sub: #888;
+                --border: #333;
+            }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-sans);
+            line-height: 1.5;
+            font-size: 15px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: inherit; text-decoration: none; }
+        .link { border-bottom: 1px solid var(--border); transition: border-color 0.2s; }
+        .link:hover { border-color: var(--text); }
+
+        .container {
+            max-width: 680px; /* Highly focused reading width */
+            margin: 0 auto;
+            padding: 4rem 1.5rem;
+        }
+
+        header { margin-bottom: 4rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 600; letter-spacing: -0.02em; }
+        nav { display: flex; gap: 1.5rem; font-size: 0.9rem; color: var(--text-sub); }
+        nav a:hover { color: var(--text); }
+
+        h1 { font-size: 1.1rem; font-weight: 500; color: var(--text); margin-bottom: 1rem; }
+        p { color: var(--text-sub); margin-bottom: 1.5rem; }
+
+        .project-list { list-style: none; margin-top: 3rem; }
+        .project-item { display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid var(--border); align-items: baseline; }
+        .project-item:last-child { border-bottom: none; }
+        .project-title { font-weight: 500; }
+        .project-year { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-sub); }
+        .project-desc { font-size: 0.9rem; color: var(--text-sub); margin-top: 0.25rem; }
+
+        .status-dot { width: 8px; height: 8px; background: #10B981; border-radius: 50%; display: inline-block; margin-right: 0.5rem; }
+        
+        footer { margin-top: 6rem; padding-top: 2rem; border-top: 1px solid var(--border); font-size: 0.85rem; color: var(--text-sub); display: flex; justify-content: space-between; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="/" class="logo">nebed.io</a>
+            <nav>
+                <a href="mailto:hello@nebed.io">Contact</a>
+            </nav>
+        </header>
+
+        {{ block "main" . }}{{ end }}
+
+        <footer>
+            <span>&copy; {{ now.Format "2006" }} Nebed</span>
+            <span style="font-family: var(--font-mono);">Tallinn, EE</span>
+        </footer>
+    </div>
+</body>
+</html>
