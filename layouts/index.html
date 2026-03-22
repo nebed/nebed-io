@@ -1,31 +1,458 @@
 {{ define "main" }}
-<main>
-    <section>
-        <div style="margin-bottom: 2rem;">
-            <!-- Lee Robinson Style Avatar/Intro -->
-            <h1 style="font-size: 2rem; font-weight: 600; letter-spacing: -0.03em; margin-bottom: 1rem; color: var(--text);">
-                Hi, I'm Uchenna Nebedum.
-            </h1>
-            <p style="font-size: 1.1rem; line-height: 1.7;">
-                I'm a DevOps Engineer and Cloud Architect (also known as <span style="color: var(--text); font-weight: 500;">Nebed</span>). 
-                I specialize in <span style="color: var(--text); font-weight: 500;">Kubernetes</span>, 
-                <span style="color: var(--text); font-weight: 500;">Terraform</span>, and building infrastructure that scales without waking you up at 3am.
-            </p>
+<!-- Interactive Infrastructure-as-Code Portfolio Layout -->
+<div class="split-layout-container">
+
+  <!-- LEFT: The Authenticated Content ("Preview") -->
+  <div class="content-side">
+      <!-- Local Header to replace the global one we hide -->
+      <div class="local-header">
+        <a href="/" class="local-logo">nebed.io</a>
+        <a href="mailto:hello@nebed.io" class="local-contact">Contact</a>
+      </div>
+
+      <main class="content-wrapper">
+        <!-- Target IDs for Terraform to update -->
+        <h1 id="nebed-bio-name" class="main-title">Hi, I'm Uchenna Nebedum.</h1>
+        <p id="nebed-bio-desc" class="main-bio">I make infrastructure boring. Specializing in systems that scale, security that works, and deployments that don't ruin your Friday.</p>
+        
+        <div class="status-box">
+             <span class="status-indicator">●</span>
+             <span id="nebed-status">Available for new projects</span>
         </div>
         
-        <div style="display: flex; gap: 1rem; align-items: center; font-size: 0.9rem; color: var(--text-sub); margin-top: 2rem;">
-            <a href="https://github.com/" class="link">GitHub ↗</a>
-            <a href="https://linkedin.com/" class="link">LinkedIn ↗</a>
+        <div class="links-container">
+            <a href="https://github.com/uchenebed" target="_blank" class="social-link">GitHub ↗</a>
+            <a href="https://linkedin.com/in/uchenna-nebedum" target="_blank" class="social-link">LinkedIn ↗</a>
         </div>
-    </section>
+      </main>
+  </div>
 
-    <section style="margin-top: 5rem;">
-         <h2 style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-sub); margin-bottom: 1rem;">Now</h2>
-         <p>
-            <span class="status-dot"></span> Building Euroboros Consulting.
-            <br>
-            Exploring eBPF for observability.
-         </p>
-    </section>
-</main>
+
+  <!-- RIGHT: The "Infrastructure Control Plane" (IDE) -->
+  <div class="ide-side">
+    <div id="vscode-portfolio-demo">
+      <!-- Load Fonts and Dependencies -->
+      <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+        
+        <div class="ide-header-bar">
+            <span class="window-dot red"></span>
+            <span class="window-dot yellow"></span>
+            <span class="window-dot green"></span>
+            <span class="window-title">nebed-io-infra — -bash — 80x24</span>
+        </div>
+
+      <div class="ide-body-row">
+        <!-- Sidebar (Hidden on small screens) -->
+        <div class="ide-sidebar">
+            <div class="explorer-title">EXPLORER</div>
+            <div id="file-list"></div>
+        </div>
+
+        <div class="ide-main-col">
+            <!-- Tabs -->
+            <div class="ide-tabs">
+            <div class="ide-tab active" id="current-tab-name">main.tf <span class="ide-tab-close">×</span></div>
+            </div>
+
+            <!-- Editor -->
+            <div class="ide-code-container">
+            <div id="editor" class="editor language-hcl"></div>
+            </div>
+
+            <!-- Terminal -->
+            <div class="ide-terminal">
+            <div class="terminal-header">
+                <div class="terminal-tab active">TERMINAL</div>
+            </div>
+            <div class="terminal-output" id="terminal-output-area">
+                <div class="terminal-line">Welcome to Nebedum OS v1.0.0</div>
+                <div class="terminal-line">Type 'help' for available commands.</div>
+                <br>
+            </div>
+            <div class="terminal-input-line">
+                <span class="prompt-path">~/nebed-io</span>
+                <span class="prompt-arrow">➜</span>
+                <input type="text" id="terminal-input" autocomplete="off" spellcheck="false" placeholder="Try 'terraform plan'...">
+            </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Styles -->
+<style>
+/* CSS Reset / Base overrides specific to this layout */
+.container { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
+header, footer { display: none !important; } /* Hide global baseof.html header/footer */
+
+/* The Split Layout */
+.split-layout-container {
+    display: flex;
+    flex-direction: row;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #FAFAFA;
+}
+
+@media (prefers-color-scheme: dark) {
+    .split-layout-container { background-color: #111; color: #eee; }
+}
+
+/* LEFT SIDE: Content */
+.content-side {
+    flex: 6; /* 60% width */
+    padding: 2rem 4rem; /* Adjusted padding */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Vertically center content */
+    position: relative;
+    border-right: 1px solid #E5E5E5;
+}
+@media (prefers-color-scheme: dark) { .content-side { border-right: 1px solid #333; } }
+
+/* Local Header (Replaces global header) */
+.local-header {
+    position: absolute;
+    top: 2rem;
+    left: 4rem;
+    right: 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+    color: var(--text);
+}
+.local-logo { font-weight: 600; text-decoration: none; color: inherit; letter-spacing: -0.02em; }
+.local-contact { color: var(--text-sub); text-decoration: none; }
+.local-contact:hover { color: var(--text); }
+
+.content-wrapper { max-width: 700px; margin: 0 auto; width: 100%; }
+.main-title { font-size: 3.5rem; letter-spacing: -0.04em; line-height: 1.1; margin-bottom: 1.5rem; color: var(--text); }
+.main-bio { font-size: 1.35rem; line-height: 1.6; color: var(--text-sub); margin-bottom: 2.5rem; font-weight: 400; }
+
+.status-box { 
+    display: inline-flex; align-items: center; gap: 8px; 
+    padding: 8px 16px; background: #EEF2FF; color: #4F46E5; 
+    border-radius: 99px; font-size: 0.9rem; font-weight: 500; margin-bottom: 3rem;
+}
+@media (prefers-color-scheme: dark) { .status-box { background: #1a1a2e; color: #818cf8; } }
+.status-indicator { color: #4F46E5; animation: blink 2s infinite; }
+
+.links-container { display: flex; gap: 2rem; }
+.social-link { font-weight: 500; font-size: 1rem; border-bottom: 1px solid transparent; }
+.social-link:hover { border-bottom: 1px solid currentColor; }
+
+/* RIGHT SIDE: IDE (Supporting Role) */
+.ide-side {
+    flex: 4; /* 40% width */
+    background: #1e1e1e; /* VS Code BG */
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+#vscode-portfolio-demo {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: #d4d4d4;
+    font-size: 13px;
+}
+
+.ide-header-bar {
+    height: 38px;
+    background: #3c3c3c;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 8px;
+    flex-shrink: 0;
+}
+.window-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.window-dot.red { background: #FF5F56; }
+.window-dot.yellow { background: #FFBD2E; }
+.window-dot.green { background: #27C93F; }
+.window-title { margin-left: auto; margin-right: auto; color: #999; font-size: 12px; font-family: sans-serif; }
+
+.ide-body-row {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+.ide-sidebar {
+    width: 180px;
+    background: #252526;
+    border-right: 1px solid #3e3e42;
+    padding-top: 10px;
+    flex-shrink: 0;
+}
+.ide-main-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.explorer-title { padding: 0 20px 10px; font-size: 11px; font-weight: bold; color: #bbbbbb; }
+.file-item { padding: 4px 20px; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #cccccc;}
+.file-item:hover { background-color: #2a2d2e; }
+.file-item.active { background-color: #37373d; color: white; }
+.tf-icon { color: #5C4EE5; font-weight: bold; font-size: 10px;}
+
+.ide-tabs { background: #252526; height: 35px; display: flex; align-items: flex-end; }
+.ide-tab { background: #2d2d2d; padding: 0 15px; height: 100%; display: flex; align-items: center; border-right: 1px solid #1e1e1e; cursor: pointer; color: #969696; }
+.ide-tab.active { background: #1e1e1e; color: white; border-top: 1px solid #569cd6; }
+.ide-tab-close { margin-left: 10px; font-size: 14px; }
+
+.ide-code-container { flex: 1; position: relative; background: #1e1e1e; overflow: hidden; }
+.editor { font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.5; padding: 20px; outline: none; min-height: 100%; tab-size: 2; }
+
+.ide-terminal {
+    height: 35%; /* Fixed height at bottom */
+    background: #1e1e1e;
+    border-top: 1px solid #3e3e42;
+    display: flex;
+    flex-direction: column;
+    padding: 8px 16px;
+    font-family: 'JetBrains Mono', monospace;
+}
+.terminal-header { text-transform: uppercase; font-size: 11px; border-bottom: 1px solid #3e3e42; margin-bottom: 5px; padding-bottom: 5px; }
+.terminal-output { flex: 1; overflow-y: auto; color: #cccccc; white-space: pre-wrap; font-size: 12px; }
+.terminal-input-line { display: flex; align-items: center; margin-top: 5px; }
+#terminal-input { background: transparent; border: none; color: white; outline: none; flex: 1; font-family: inherit; font-size: 12px; }
+.terminal-line.command { color: #fff; font-weight: bold; }
+.terminal-line.success { color: #6a9955; }
+.terminal-line.error { color: #f48771; }
+.terminal-line.diff-add { color: #b5cea8; }
+.terminal-line.diff-sub { color: #ce9178; }
+.prompt-path { color: #569cd6; margin-right: 5px; }
+.prompt-arrow { color: #cccccc; margin-right: 8px;}
+
+/* Mobile Responsive */
+@media (max-width: 900px) {
+    .split-layout-container { flex-direction: column; }
+    .content-side { flex: none; padding: 4rem 2rem; border-right: none; height: auto; min-height: 80vh; }
+    .local-header { left: 2rem; right: 2rem; }
+    .main-title { font-size: 2.5rem; }
+
+    /* Stack IDE below */
+    .ide-side { flex: none; height: 600px; border-top: 1px solid #E5E5E5; }
+    #vscode-portfolio-demo { height: 100%; }
+    .ide-sidebar { display: none; } /* Simplify on mobile */
+}
+
+@keyframes blink { 50% { opacity: 0.5; } }
+</style>
+
+<!-- Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-hcl.min.js"></script>
+<script type="module">
+  import { CodeJar } from 'https://medv.io/codejar/codejar.js';
+
+  // --- Data State ---
+  const fileSystem = {
+    'main.tf': {
+      content: `resource "nebed_bio" "me" {
+  name        = "Uchenna Nebedum"
+  role        = "DevOps Engineer"
+  description = "I make infrastructure boring. Specializing in systems that scale, security that works, and deployments that don't ruin your Friday."
+}
+
+resource "nebed_status" "now" {
+  text = "Available for new projects"
+}`,
+      language: 'hcl'
+    },
+    'variables.tf': {
+      content: `variable "region" {
+  default = "us-east-1"
+  description = "The AWS region to deploy the portfolio to."
+}`,
+      language: 'hcl'
+    },
+    'backend.tf': {
+      content: `terraform {
+  backend "s3" {
+    bucket = "nebed-io-state"
+    key    = "prod/terraform.tfstate"
+  }
+}`,
+      language: 'hcl'
+    }
+  };
+
+  let activeFile = 'main.tf';
+  
+  // --- Editor Setup ---
+  const editorElement = document.querySelector('#editor');
+  
+  const highlight = editor => {
+      const code = editor.textContent;
+      editor.innerHTML = Prism.highlight(code, Prism.languages.hcl, 'hcl');
+  };
+
+  const jar = CodeJar(editorElement, highlight);
+  
+  // Initial Load
+  jar.updateCode(fileSystem['main.tf'].content);
+
+  // --- UI Logic: Sidebar ---
+  const fileListEl = document.getElementById('file-list');
+  function renderSidebar() {
+    if(!fileListEl) return;
+    fileListEl.innerHTML = '';
+    Object.keys(fileSystem).forEach(filename => {
+      const div = document.createElement('div');
+      div.className = `file-item ${filename === activeFile ? 'active' : ''}`;
+      div.innerHTML = `<span class="file-icon tf-icon">TF</span> ${filename}`;
+      div.onclick = () => switchFile(filename);
+      fileListEl.appendChild(div);
+    });
+  }
+
+  function switchFile(filename) {
+    fileSystem[activeFile].content = jar.toString();
+    activeFile = filename;
+    document.getElementById('current-tab-name').innerHTML = `${filename} <span class="ide-tab-close">×</span>`;
+    jar.updateCode(fileSystem[filename].content);
+    renderSidebar();
+  }
+  
+  renderSidebar();
+
+  // --- Terraform Simulation Logic ---
+
+  function parseHCL(hclContent) {
+      const result = {};
+      const bioMatch = hclContent.match(/resource\s+"nebed_bio"\s+"me"\s+{([^}]+)}/);
+      if (bioMatch) {
+          const block = bioMatch[1];
+          const name = block.match(/name\s*=\s*"([^"]+)"/);
+          const desc = block.match(/description\s*=\s*"([^"]+)"/);
+          result.bio = {
+              name: name ? name[1] : null,
+              description: desc ? desc[1] : null
+          };
+      }
+      const statusMatch = hclContent.match(/resource\s+"nebed_status"\s+"now"\s+{([^}]+)}/);
+      if (statusMatch) {
+          const block = statusMatch[1];
+          const text = block.match(/text\s*=\s*"([^"]+)"/);
+          result.status = text ? text[1] : null;
+      }
+      return result;
+  }
+
+  function getCurrentDomState() {
+      // Safe get even if IDs are slightly different or missing
+      const nameEl = document.getElementById('nebed-bio-name');
+      const descEl = document.getElementById('nebed-bio-desc');
+      const statusEl = document.getElementById('nebed-status');
+      
+      return {
+          bio: {
+              // Be robust against "Hi, I'm" prefix not being there if user already edited it
+              name: nameEl ? nameEl.innerText.replace(/^Hi, I'm /, "").replace(/\.$/, "") : "",
+              description: descEl ? descEl.innerText : ""
+          },
+          status: statusEl ? statusEl.innerText : ""
+      };
+  }
+
+  // --- Terminal Logic ---
+  const terminalInput = document.getElementById('terminal-input');
+  const terminalOutput = document.getElementById('terminal-output-area');
+
+  function printLine(text, type = '') {
+      const div = document.createElement('div');
+      div.className = `terminal-line ${type}`;
+      div.innerText = text;
+      terminalOutput.appendChild(div);
+      terminalOutput.scrollTop = terminalOutput.scrollHeight;
+  }
+
+  terminalInput.addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+          const cmd = this.value.trim();
+          this.value = '';
+          printLine(`➜ ${cmd}`, 'command');
+          processCommand(cmd);
+      }
+  });
+
+  function processCommand(cmd) {
+      // Basic alias
+      if (cmd === 'tf plan') cmd = 'terraform plan';
+      if (cmd === 'tf apply') cmd = 'terraform apply';
+
+      if (cmd === 'help') {
+          printLine("Available commands: ls, terraform plan, terraform apply, clear");
+      } 
+      else if (cmd === 'clear') { terminalOutput.innerHTML = ''; }
+      else if (cmd === 'ls') { Object.keys(fileSystem).forEach(f => printLine(f)); }
+      else if (cmd === 'terraform plan') {
+          fileSystem[activeFile].content = jar.toString();
+          const parsed = parseHCL(fileSystem['main.tf'].content);
+          const current = getCurrentDomState();
+          
+          let hasChanges = false;
+          printLine("Checking configuration...", "success");
+
+          if (parsed.bio && parsed.bio.name) {
+             const currentName = current.bio.name; 
+             if (!currentName.includes(parsed.bio.name) && parsed.bio.name !== currentName) {
+                printLine(`~ resource "nebed_bio" "me" {`, 'diff-sub');
+                printLine(`   name = "${currentName}" -> "${parsed.bio.name}"`, 'diff-add');
+                printLine(`  }`, 'diff-sub');
+                hasChanges = true;
+             }
+          }
+
+          if (parsed.status && parsed.status !== current.status) {
+             printLine(`~ resource "nebed_status" "now" {`, 'diff-sub');
+             printLine(`   text = "${current.status}" -> "${parsed.status}"`, 'diff-add');
+             printLine(`  }`, 'diff-sub');
+             hasChanges = true;
+          }
+          
+          if(hasChanges) printLine("\nPlan: Changes detected.", "success");
+          else printLine("\nNo changes. Infrastructure matches configuration.", "success");
+      }
+      else if (cmd === 'terraform apply') {
+          fileSystem[activeFile].content = jar.toString();
+          const parsed = parseHCL(fileSystem['main.tf'].content);
+          
+          printLine("Applying changes...");
+          setTimeout(() => {
+              let updated = 0;
+              if (parsed.bio && parsed.bio.name) {
+                 let finalName = parsed.bio.name;
+                 // Add prefix back for visual consistency if user just typed their name
+                 if(!finalName.startsWith("Hi,")) finalName = "Hi, I'm " + finalName;
+                 if(!finalName.endsWith(".")) finalName = finalName + ".";
+                 
+                 const el = document.getElementById('nebed-bio-name');
+                 if(el) { el.innerText = finalName; updated++; }
+              }
+              if (parsed.bio && parsed.bio.description) {
+                   const el = document.getElementById('nebed-bio-desc');
+                   if(el) { el.innerText = parsed.bio.description; updated++; }
+              }
+              if (parsed.status) {
+                  const el = document.getElementById('nebed-status');
+                  if(el) { el.innerText = parsed.status; updated++; }
+              }
+              printLine(`Apply complete! Resources: ${updated} updated, 0 added, 0 destroyed.`, "success");
+          }, 600);
+      } 
+      else { printLine(`bash: ${cmd}: command not found`, 'error'); }
+  }
+</script>
 {{ end }}

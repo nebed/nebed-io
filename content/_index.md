@@ -11,4 +11,4 @@ draft: false
 I build robust, scalable infrastructure with clean code and minimal friction.
 Specializing in Kubernetes, Terraform, and Cloud Architecture.
 
-[GitHub](https://github.com/) | [LinkedIn](https://linkedin.com/) | [Email](mailto:hello@nebed.io)
+[GitHub](https://github.com/nebed) | [LinkedIn](https://linkedin.com/in/nebed) | [Email](mailto:me@nebed.io)
